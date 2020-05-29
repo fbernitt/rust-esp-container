@@ -108,7 +108,8 @@ RUN git clone \
         --llvm-root "${LLVM_INSTALL_PATH}" \
         --prefix "${RUSTC_BUILD_PATH}" \
  && python ./x.py build \
- && python ./x.py install
+ && python ./x.py install \
+ && git clean -xfd
 
 # -------------------------------------------------------------------
 # Setup rustup toolchain
