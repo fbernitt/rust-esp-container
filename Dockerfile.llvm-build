@@ -50,6 +50,6 @@ RUN mkdir build \
        -DCMAKE_CXX_FLAGS="-w" \
        -G "Ninja" \
  && ninja install \
- && cd.. \
+ && cd .. \
  && rm -rf build
 
