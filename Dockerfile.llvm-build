@@ -1,0 +1,55 @@
+FROM debian:buster-slim as builder
+LABEL maintainer "Folker Bernitt <folker-bernitt-github@gmx.de>"
+
+
+# -------------------------------------------------------------------
+# Install expected depdendencies
+# -------------------------------------------------------------------
+
+RUN apt-get update \
+ && apt-get install -y \
+       bison \
+       cmake \
+       curl \
+       flex \
+       g++ \
+       gcc \
+       git \
+       gperf \
+       libncurses-dev \
+       make \
+       python3 \
+       ninja-build \
+ && rm -rf /var/lib/apt/lists/*
+
+# -------------------------------------------------------------------
+# Build llvm-xtensa
+# -------------------------------------------------------------------
+
+# llvm-xtensa (xtensa_release_9.0.1)
+ARG LLVM_VERSION="ae26b7e4eb0938601f8a8744ff50c178a3ef0847"
+ARG LLVM_INSTALL_PATH="/opt/llvm-xtensa/"
+
+WORKDIR "/tmp/llvm-build"
+RUN git init \
+ && git remote add origin https://github.com/espressif/llvm-project.git \
+ && git fetch --depth 1 origin "${LLVM_VERSION}" \
+ && git checkout FETCH_HEAD
+
+RUN mkdir build \
+ && cd build \
+ && cmake "../llvm" \
+       -DPYTHON_EXECUTABLE=/usr/bin/python3 \
+       -DLLVM_EXPERIMENTAL_TARGETS_TO_BUILD="Xtensa" \
+       -DLLVM_ENABLE_PROJECTS=clang \
+       -DLLVM_INSTALL_UTILS=ON \
+       -DLLVM_BUILD_TESTS=0 \
+       -DLLVM_INCLUDE_TESTS=0 \
+       -DCMAKE_BUILD_TYPE=Release \
+       -DCMAKE_INSTALL_PREFIX="${LLVM_INSTALL_PATH}" \
+       -DCMAKE_CXX_FLAGS="-w" \
+       -G "Ninja" \
+ && ninja install \
+ && cd.. \
+ && rm -rf build
+
