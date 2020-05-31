@@ -1,6 +1,7 @@
+ARG LLVM_INSTALL_PATH="/opt/llvm-xtensa/"
+
 FROM debian:buster-slim as builder
 LABEL maintainer "Folker Bernitt <folker-bernitt-github@gmx.de>"
-
 
 # -------------------------------------------------------------------
 # Install expected depdendencies
@@ -28,7 +29,6 @@ RUN apt-get update \
 
 # llvm-xtensa (xtensa_release_9.0.1)
 ARG LLVM_VERSION="ae26b7e4eb0938601f8a8744ff50c178a3ef0847"
-ARG LLVM_INSTALL_PATH="/opt/llvm-xtensa/"
 
 WORKDIR "/tmp/llvm-build"
 RUN git init \
@@ -52,4 +52,13 @@ RUN mkdir build \
  && ninja install \
  && cd .. \
  && rm -rf build
+
+FROM debian:buster-slim
+LABEL maintainer "Folker Bernitt <folker-bernitt-github@gmx.de>"
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends libstdc++-8-dev binutils && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder ${LLVM_INSTALL_PATH} ${LLVM_INSTALL_PATH}
 
