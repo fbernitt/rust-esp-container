@@ -9,6 +9,16 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build llvm xtensa
       run: docker build . --file Dockerfile.llvm-build --tag llvm-xtensa:${{ github.sha }}
+
+    - name: Authenticate
+      run: echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+
+    - name: Tag the image
+      run: docker tag llvm-xtensa:${{ github.sha }} fbernitt/llvm-xtensa:latest
+
+    - name: Push the image
+      run: docker push fbernitt/llvm-xtensa:latest
+
   # build:
   #   needs: build-llvm
   #   runs-on: ubuntu-latest
