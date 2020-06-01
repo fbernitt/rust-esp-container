@@ -46,7 +46,7 @@ RUN mkdir build \
        -DLLVM_BUILD_TESTS=0 \
        -DLLVM_INCLUDE_TESTS=0 \
        -DCMAKE_BUILD_TYPE=Release \
-       -DCMAKE_INSTALL_PREFIX="${LLVM_INSTALL_PATH}" \
+       -DCMAKE_INSTALL_PREFIX="/opt/llvm-xtensa/" \
        -DCMAKE_CXX_FLAGS="-w" \
        -G "Ninja" \
  && ninja install \
@@ -60,5 +60,5 @@ RUN apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get install -y --no-install-recommends libstdc++-8-dev binutils && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder ${LLVM_INSTALL_PATH} ${LLVM_INSTALL_PATH}
+COPY --from=builder /opt/llvm-xtensa/ /opt/llvm-xtensa/
 
