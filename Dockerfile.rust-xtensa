@@ -1,0 +1,20 @@
+ARG RUSTC_INSTALL_PATH="/opt/rust_xtensa"
+
+FROM fbernitt/llvm-xtensa:latest as builder
+LABEL maintainer "Folker Bernitt <folker-bernitt-github@gmx.de>"
+
+RUN apt-get update \
+ && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
+    cmake g++ make python python-pip git curl libncurses-dev \
+ && rm -rf /var/lib/apt/lists/*
+
+
+WORKDIR /tmp/rustc-build
+RUN git init \
+  && git remote add origin https://github.com/MabezDev/rust-xtensa.git \
+  && git fetch --depth 1 origin xtensa-target \
+  && git checkout FETCH_HEAD
+
+RUN ./configure --experimental-targets=Xtensa --llvm-root=/opt/llvm-xtensa  --prefix=/opt/rust_xtensa \
+  && python x.py build
+

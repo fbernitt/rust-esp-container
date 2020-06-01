@@ -19,11 +19,18 @@ jobs:
     - name: Push the image
       run: docker push fbernitt/llvm-xtensa:latest
 
-  # build:
-  #   needs: build-llvm
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Build the image
-  #     run: docker build . --file Dockerfile --tag rust-esp:${{ github.sha }}
+  build-rust:
+    # needs: build-llvm
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build rust xtensa
+      run: docker build . --file Dockerfile.rust-xtensa --tag rust-xtensa:${{ github.sha }}
+
+    - name: Authenticate
+      run: echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USER }} --password-stdin
+
+    - name: Tag the image
+      run: docker tag rust-xtensa:${{ github.sha }} fbernitt/rust-xtensa:latest
 
