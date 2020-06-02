@@ -34,3 +34,6 @@ jobs:
     - name: Tag the image
       run: docker tag rust-xtensa:${{ github.sha }} fbernitt/rust-xtensa:latest
 
+    - name: Push the image
+      run: docker push fbernitt/rust-xtensa:latest
+

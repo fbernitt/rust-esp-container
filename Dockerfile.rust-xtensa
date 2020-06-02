@@ -1,4 +1,4 @@
-ARG RUSTC_INSTALL_PATH="/opt/rust_xtensa"
+ARG RUSTC_INSTALL_PATH="/opt/rust-xtensa"
 
 FROM fbernitt/llvm-xtensa:latest as builder
 LABEL maintainer "Folker Bernitt <folker-bernitt-github@gmx.de>"
@@ -15,6 +15,11 @@ RUN git init \
   && git fetch --depth 1 origin xtensa-target \
   && git checkout FETCH_HEAD
 
-RUN ./configure --experimental-targets=Xtensa --llvm-root=/opt/llvm-xtensa  --prefix=/opt/rust_xtensa \
+RUN ./configure --experimental-targets=Xtensa --llvm-root=/opt/llvm-xtensa  --prefix=/opt/rust-xtensa/ \
   && python x.py build
+
+FROM fbernitt/llvm-xtensa:latest
+LABEL maintainer "Folker Bernitt <folker-bernitt-github@gmx.de>"
+
+COPY --from=builder /opt/rust-xtensa/ /opt/rust-xtensa/
 
