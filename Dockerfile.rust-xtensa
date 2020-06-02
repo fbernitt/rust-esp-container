@@ -5,7 +5,7 @@ LABEL maintainer "Folker Bernitt <folker-bernitt-github@gmx.de>"
 
 RUN apt-get update \
  && DEBIAN_FRONTEND="noninteractive" apt-get install -y \
-    cmake g++ make python python-pip git curl libncurses-dev \
+    cmake g++ make python python-pip git curl libncurses-dev libssl-dev pkg-config curl \
  && rm -rf /var/lib/apt/lists/*
 
 
