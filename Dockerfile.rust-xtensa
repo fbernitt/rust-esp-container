@@ -25,3 +25,15 @@ LABEL maintainer "Folker Bernitt <folker-bernitt-github@gmx.de>"
 
 COPY --from=builder /opt/rust-xtensa/ /opt/rust-xtensa/
 
+RUN cd /opt/rust-xtensa \
+ && curl \
+        --proto '=https' \
+        --tlsv1.2 \
+        -sSf \
+        https://sh.rustup.rs \
+    | sh -s -- -y --default-toolchain stable \
+ && rustup component add rustfmt \
+ && rustup toolchain link xtensa /opt/rust-xtensa \
+ && cargo install bindgen \
+ && cargo install --version 0.5.29 cargo-xbuild
+
