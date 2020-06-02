@@ -15,8 +15,10 @@ RUN git init \
   && git fetch --depth 1 origin xtensa-target \
   && git checkout FETCH_HEAD
 
-RUN ./configure --experimental-targets=Xtensa --llvm-root=/opt/llvm-xtensa  --prefix=/opt/rust-xtensa/ \
-  && python x.py build
+RUN mkdir -p /opt/rust-xtensa \
+  && ./configure --experimental-targets=Xtensa --llvm-root=/opt/llvm-xtensa  --prefix=/opt/rust-xtensa/ \
+  && python x.py build \
+  && python x.py install
 
 FROM fbernitt/llvm-xtensa:latest
 LABEL maintainer "Folker Bernitt <folker-bernitt-github@gmx.de>"
