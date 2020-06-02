@@ -6,18 +6,17 @@ jobs:
   build-llvm:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Build llvm xtensa
-      run: docker build . --file Dockerfile.llvm-build --tag llvm-xtensa:${{ github.sha }}
+    - name: Checkout the repository
+      uses: actions/checkout@v2
 
-    - name: Authenticate
-      run: echo ${{ secrets.DOCKER_HUB_TOKEN }} | docker login --username ${{ secrets.DOCKER_HUB_USER }} --password-stdin
-
-    - name: Tag the image
-      run: docker tag llvm-xtensa:${{ github.sha }} fbernitt/llvm-xtensa:latest
-
-    - name: Push the image
-      run: docker push fbernitt/llvm-xtensa:latest
+    - name: Build and push to docker hub
+      uses: docker/build-push-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USER }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+        repository: fbernitt/llvm-xtensa
+        dockerfile: Dockerfile.llvm-build
+        tag_with_ref: true
 
   build-rust:
     # needs: build-llvm

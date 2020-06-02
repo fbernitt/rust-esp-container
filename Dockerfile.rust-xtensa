@@ -1,3 +1,5 @@
+# vim: ft=dockerfile
+
 ARG RUSTC_INSTALL_PATH="/opt/rust-xtensa"
 
 FROM fbernitt/llvm-xtensa:latest as builder

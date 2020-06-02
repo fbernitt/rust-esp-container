@@ -1,3 +1,5 @@
+# vim: ft=dockerfile
+
 ARG LLVM_INSTALL_PATH="/opt/llvm-xtensa/"
 
 FROM debian:buster-slim as builder
